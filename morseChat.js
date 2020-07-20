@@ -441,14 +441,14 @@ const morseToEngCommand = {
     let state = ''
 
     for (const morse of [...msg + ' ']) {
-      const normMorze = normalizeChar(morse)
+      const normMorse = normalizeChar(morse)
 
-      if (normMorze === null) {
+      if (normMorse === null) {
         return `\`\`\`"${morse}" - is not valid morse character\`\`\``
       }
 
-      state = morseSpaceTransition(state, normMorze)
-      state = morseTransition(state, normMorze)
+      state = morseSpaceTransition(state, normMorse)
+      state = morseTransition(state, normMorse)
 
       if (state === -1) {
         outputMsg += lastState

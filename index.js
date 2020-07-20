@@ -17,7 +17,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   if (
-    // only for morze text chat
+    // only for morse text chat
     msg.channel.id === '734092902770278482' &&
     msg.author.id !== '734092109036126359' &&
     !msg.author.bot
