@@ -1,4 +1,4 @@
-const { isValidMorze, morseChatCommands } = require('./morseChat.js')
+const { isValidMorse, morseChatCommands } = require('./morseChat.js')
 
 const prefix = '!'
 
@@ -31,7 +31,7 @@ client.on('message', msg => {
 
     if (client.commands.has(command)) {
       msg.reply(client.commands.get(command).execute(message))
-    } else if (!isValidMorze(msg.content)) {
+    } else if (!isValidMorse(msg.content)) {
       msg.delete()
     }
   }
