@@ -1,4 +1,3 @@
-/* global token */
 const { isValidMorze, morseChatCommands } = require('./morseChat.js')
 
 const prefix = '!'
@@ -38,4 +37,4 @@ client.on('message', msg => {
   }
 })
 
-client.login(token)
+client.login(process.env.token)
