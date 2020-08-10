@@ -1,4 +1,4 @@
-/* global token */
+const { token } = require('./token.js')
 const { isValidMorse, morseChatCommands } = require('./morseChat.js')
 
 const prefix = '!'
