@@ -10,8 +10,8 @@ const client = new Discord.Client()
 function parseCommand (msg) {
   let command = null
 
-  const message = msg.content.replace(new RegExp(`^${prefix}\\w+ `), cmd => {
-    command = cmd.slice(1, cmd.length - 1)
+  const message = msg.content.replace(new RegExp(`^${prefix}\\w+\\s*`), cmd => {
+    command = cmd.slice(1, cmd.length).trim()
 
     return ''
   })
@@ -31,7 +31,7 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`)
 })
 
-client.on('message', msg => {
+client.on('message', async (msg) => {
   if (
     // only for morze text chat
     msg.channel.id === '734092902770278482' &&
@@ -39,7 +39,7 @@ client.on('message', msg => {
     !msg.author.bot
   ) {
     const { command, message } = parseCommand(msg)
-    console.log(`command == ${command}`)
+
     if (client.commands.has(command)) {
       msg.reply(client.commands.get(command).execute(message))
     } else if (!isValidMorse(msg.content)) {
@@ -54,11 +54,11 @@ client.on('message', msg => {
     !msg.author.bot
   ) {
     const { command } = parseCommand(msg)
-    console.log(`command === ${command}`)
+
     if (client.commands.has(command)) {
-      const { answer, image } = client.commands.get(command).execute()
-      console.log('show me the answer')
-      msg.reply(`AKOoka: ${answer}`)
+      const { answer, image } = await client.commands.get(command).execute()
+
+      msg.reply(answer, { files: [image] })
     }
   }
 })

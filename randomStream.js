@@ -1,26 +1,34 @@
-const https = require('https')
+const fetch = require('node-fetch')
+const fs = require('fs')
 
 const willBeStream = {
   name: 'stream',
   description: 'asks bot if there will be stream or not',
   execute () {
-    https.get('https://yesno.wtf/api', (resp) => {
-      let data = ''
-
-      // A chunk of data has been recieved.
-      resp.on('data', (chunk) => {
-        data += chunk
-      })
-
-      // The whole response has been received. Print out the result.
-      resp.on('end', () => {
-        const { answer, image } = JSON.parse(data)
-        return { answer, image }
-      })
-    }).on('error', (err) => {
-      console.log('Error: ' + err.message)
-    })
+    return checkTime()
   }
+}
+
+async function checkTime () {
+  const fileData = fs.readFileSync('streamToday.json')
+  const { date, answer, image } = JSON.parse(fileData)
+  const currenDate = new Date().getDate()
+
+  if (date !== currenDate) {
+    const jsonData = await fetch('https://yesno.wtf/api')
+    const data = await jsonData.json()
+    const saveData = {
+      date: currenDate,
+      answer: data.answer,
+      image: data.image
+    }
+
+    fs.writeFileSync('streamToday.json', JSON.stringify(saveData))
+
+    return { answer: data.answer, image: data.image }
+  }
+
+  return { answer, image }
 }
 
 module.exports = { willBeStream }
