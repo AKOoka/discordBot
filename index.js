@@ -21,11 +21,17 @@ function parseCommand (msg) {
 
 client.commands = new Discord.Collection()
 
+client.commands.set('morseCommands', new Map())
+client.commands.set('streamCommands', new Map())
+
+const morseCommands = client.commands.get('morseCommands')
+const streamCommands = client.commands.get('streamCommands')
+
 for (const command of morseChatCommands) {
-  client.commands.set(command.name, command)
+  morseCommands.set(command.name, command)
 }
 
-client.commands.set(willBeStream.name, willBeStream)
+streamCommands.set(willBeStream.name, willBeStream)
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`)
@@ -39,9 +45,10 @@ client.on('message', async (msg) => {
     !msg.author.bot
   ) {
     const { command, message } = parseCommand(msg)
+    const cmd = morseCommands.get(command)
 
-    if (client.commands.has(command)) {
-      msg.reply(client.commands.get(command).execute(message))
+    if (cmd) {
+      msg.reply(cmd.execute(message))
     } else if (!isValidMorse(msg.content)) {
       msg.delete()
     }
@@ -54,9 +61,10 @@ client.on('message', async (msg) => {
     !msg.author.bot
   ) {
     const { command } = parseCommand(msg)
+    const cmd = streamCommands.get(command)
 
-    if (client.commands.has(command)) {
-      const { answer, image } = await client.commands.get(command).execute()
+    if (cmd) {
+      const { answer, image } = await cmd.execute()
 
       msg.reply(answer, { files: [image] })
     }
